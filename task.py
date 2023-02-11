@@ -10,7 +10,7 @@ from sklearn.metrics import normalized_mutual_info_score
 from sklearn.metrics import adjusted_rand_score
 
 crime_counts = np.load(args.data_path + args.crime_counts, allow_pickle=True)
-check_counts = np.load(r'E:\PyCharm_Project\ARE_relation\data\check_counts.npy', allow_pickle=True)
+check_counts = np.load(args.data_path + args.check_counts, allow_pickle=True)
 
 with open(args.data_path + args.mh_cd, 'r') as f:
     mh_cd = json.load(f)
@@ -72,26 +72,6 @@ def classify(emb, rand):
 
 
 def clustering(emb):
-    # best_nmi = 0
-    # best_ari = 0
-    # r = 0
-    # ok =False
-    #
-    # for i in range(5000):
-    #     for j in range(10000):
-    #         nmi, ari = classify(emb, j)
-    #         # if nmi > best_nmi and ari > best_ari:
-    #         if ari > 0.65:
-    #             best_nmi = nmi
-    #             best_ari = ari
-    #             r = j
-    #             ok = True
-    #             break
-    #         print(i, j, nmi, ari)
-    #     if ok:
-    #         break
-    # print(r)
-    # return best_nmi, best_ari
     nmi, ari = classify(emb, 3)  # 9
     return nmi, ari
 

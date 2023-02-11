@@ -1,5 +1,4 @@
 from task import clustering
-
 import numpy as np
 
 if __name__ == '__main__':

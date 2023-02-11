@@ -12,7 +12,8 @@ class RelationGCN(nn.Module):
 
         self.gcns = nn.ModuleList([GCNConv(in_channels=embedding_size, out_channels=embedding_size)
                                    for _ in range(self.gcn_layers)])
-        self.bns = nn.ModuleList([nn.BatchNorm1d(embedding_size) for _ in range(self.gcn_layers - 1)])
+        self.bns = nn.ModuleList([nn.BatchNorm1d(embedding_size)
+                                 for _ in range(self.gcn_layers - 1)])
         self.relation_transformation = nn.ModuleList([nn.Linear(embedding_size, embedding_size)
                                                       for _ in range(self.gcn_layers)])
 
@@ -74,7 +75,8 @@ class CrossLayer(nn.Module):
         self.alpha_d = nn.Parameter(torch.tensor(0.95))
         self.alpha_s = nn.Parameter(torch.tensor(0.95))
 
-        self.attn = nn.MultiheadAttention(embed_dim=embedding_size, num_heads=4)
+        self.attn = nn.MultiheadAttention(
+            embed_dim=embedding_size, num_heads=4)
 
     def forward(self, n_emb, poi_emb, s_emb, d_emb):
         stk_emb = torch.stack((n_emb, poi_emb, d_emb, s_emb))
@@ -95,10 +97,14 @@ class AttentionFusionLayer(nn.Module):
         self.fusion_lin = nn.Linear(embedding_size, embedding_size)
 
     def forward(self, n_f, poi_f, s_f, d_f):
-        n_w = torch.mean(torch.sum(F.leaky_relu(self.fusion_lin(n_f)) * self.q, dim=1))
-        poi_w = torch.mean(torch.sum(F.leaky_relu(self.fusion_lin(poi_f)) * self.q, dim=1))
-        s_w = torch.mean(torch.sum(F.leaky_relu(self.fusion_lin(s_f)) * self.q, dim=1))
-        d_w = torch.mean(torch.sum(F.leaky_relu(self.fusion_lin(d_f)) * self.q, dim=1))
+        n_w = torch.mean(torch.sum(F.leaky_relu(
+            self.fusion_lin(n_f)) * self.q, dim=1))
+        poi_w = torch.mean(torch.sum(F.leaky_relu(
+            self.fusion_lin(poi_f)) * self.q, dim=1))
+        s_w = torch.mean(torch.sum(F.leaky_relu(
+            self.fusion_lin(s_f)) * self.q, dim=1))
+        d_w = torch.mean(torch.sum(F.leaky_relu(
+            self.fusion_lin(d_f)) * self.q, dim=1))
 
         w_stk = torch.stack((n_w, poi_w, s_w, d_w))
         w = torch.softmax(w_stk, dim=0)
@@ -107,9 +113,9 @@ class AttentionFusionLayer(nn.Module):
         return region_feature
 
 
-class PM_Model(nn.Module):
+class HRE(nn.Module):
     def __init__(self, embedding_size, dropout, gcn_layers):
-        super(PM_Model, self).__init__()
+        super(HRE, self).__init__()
 
         self.relation_gcns = RelationGCN(embedding_size, dropout, gcn_layers)
 

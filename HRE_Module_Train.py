@@ -1,8 +1,7 @@
 import utils
 from parse_args import args
 from task import predict_crime, clustering, predict_check
-from pre_training_model import PM_Model
-# from ablation import MyModel
+from HRE_Module import HRE
 
 import random
 from tqdm import tqdm
@@ -28,7 +27,8 @@ d_edge_index = torch.tensor(d_edge_index, dtype=torch.long).to(args.device)
 n_edge_index = torch.tensor(n_edge_index, dtype=torch.long).to(args.device)
 
 mobility = torch.tensor(mobility, dtype=torch.float32).to(args.device)
-poi_similarity = torch.tensor(poi_similarity, dtype=torch.float32).to(args.device)
+poi_similarity = torch.tensor(
+    poi_similarity, dtype=torch.float32).to(args.device)
 
 features = torch.randn(args.regions_num, args.embedding_size).to(args.device)
 poi_r = torch.randn(args.embedding_size).to(args.device)
@@ -44,12 +44,14 @@ def mob_loss(s_emb, d_emb, mob):
     ps_hat = F.softmax(inner_prod, dim=-1)
     inner_prod = torch.mm(d_emb, s_emb.T)
     pd_hat = F.softmax(inner_prod, dim=-1)
-    loss = torch.sum(-torch.mul(mob, torch.log(ps_hat)) - torch.mul(mob, torch.log(pd_hat)))
+    loss = torch.sum(-torch.mul(mob, torch.log(ps_hat)) -
+                     torch.mul(mob, torch.log(pd_hat)))
     return loss
 
 
 def train(net):
-    optimizer = optim.Adam(net.parameters(), lr=args.learning_rate, weight_decay=5e-3)
+    optimizer = optim.Adam(
+        net.parameters(), lr=args.learning_rate, weight_decay=5e-3)
     loss_fn1 = torch.nn.TripletMarginLoss()
     loss_fn2 = torch.nn.MSELoss()
 
@@ -60,7 +62,8 @@ def train(net):
 
     for epoch in range(args.epochs):
         optimizer.zero_grad()
-        region_emb, n_emb, poi_emb, s_emb, d_emb = net(features, rel_emb, edge_index)
+        region_emb, n_emb, poi_emb, s_emb, d_emb = net(
+            features, rel_emb, edge_index)
 
         pos_idx, neg_idx = utils.pair_sample(neighbor)
 
@@ -68,8 +71,8 @@ def train(net):
 
         m_loss = mob_loss(s_emb, d_emb, mobility)
 
-        POI_loss = loss_fn2(torch.mm(poi_emb, poi_emb.T), poi_similarity)
-        loss = POI_loss + m_loss + geo_loss
+        poi_loss = loss_fn2(torch.mm(poi_emb, poi_emb.T), poi_similarity)
+        loss = poi_loss + m_loss + geo_loss
         loss.backward()
         optimizer.step()
 
@@ -112,7 +115,8 @@ def test(net):
 
 
 if __name__ == '__main__':
-    net = PM_Model(args.embedding_size, args.dropout, args.gcn_layers).to(args.device)
+    net = HRE(args.embedding_size, args.dropout,
+              args.gcn_layers).to(args.device)
     print('training-----------------')
     net.train()
     train(net)
