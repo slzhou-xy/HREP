@@ -1,1 +1,1 @@
-# HREP: Heterogeneous Region Embedding with Prompt Learning, AAAI2023
+# [AAAI 2023] Heterogeneous Region Embedding with Prompt Learning
