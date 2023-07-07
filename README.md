@@ -4,6 +4,6 @@ I have been quite busy lately. The dataset and details will be added as soon as 
 ## Train
 python HRE_Module_Train.py
 ## Test
-python Crime_Prompt.py
-python Check_Prompt.py
+python Crime_Prompt.py \
+python Check_Prompt.py \
 python lud_test.py
