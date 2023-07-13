@@ -5,10 +5,10 @@ This is a PyTorch implementation of HREP. /
 Author list: Silin Zhou, Dan He, Lisi Chen, Shuo Shang, and Peng Han.
 
 ## Framework
-![Framework]([framework.png]#pic_center)
+![Framework](framework.png#pic_center)
 
 ## Experiment
-![Exp]([exp.png]#pic_center)
+![Exp](exp.png#pic_center)
 
 ## If you want to reproduce the results, please follow the steps below
 ### Train
