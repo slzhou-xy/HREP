@@ -1,5 +1,5 @@
 # [AAAI 2023] Heterogeneous Region Embedding with Prompt Learning
-**I have been quite busy lately. The dataset and details will be added as soon as possible. If there are any questions, you can send me an email.** /
+**I have been quite busy lately. The dataset and details will be added as soon as possible. If there are any questions, you can send me an email.**
 
 This is a PyTorch implementation of HREP. /
 Author list: Silin Zhou, Dan He, Lisi Chen, Shuo Shang, and Peng Han.
